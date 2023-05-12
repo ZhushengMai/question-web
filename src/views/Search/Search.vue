@@ -38,6 +38,8 @@ const searchData = ref({});
 
 // 搜索方法
 const searchQuestion = async () => {
+  
+
   let result = await proxy.Request({
     url: question.search,
     params: {

@@ -103,9 +103,10 @@
             v-if="item.showReply"
           ></CommentBox>
 
+          <!-- 评论列表 -->
           <!-- <div class="reply-list">
             <div class="user-reply">
-              前端搬运工：这需求不是求并集呢，而是去掉重复的数据
+              
             </div>
             <div class="reply-action">
               <span>回复</span>
@@ -150,6 +151,7 @@
   <el-drawer v-model="drawer" :with-header="false" direction="btt" size="60%">
     <div class="answer-main">
       <el-form
+        :rules="rules"
         :model="answerData"
         ref="answerDataRef"
         class="post-pannel"
@@ -268,7 +270,7 @@ const delQuestion = async () => {
       return;
     }
     proxy.Message.success("删除成功");
-    router.push("/");
+    router.go(-1);
   });
 };
 
@@ -277,9 +279,15 @@ const editQuestion = () => {
   router.push(`/editPost/${questionDetail.value.questionId}`);
 };
 
+// 回答校验
+
+const rules = reactive({
+  content: [{ required: true, message: "请输入正文", trigger: "blur" }],
+});
+
 // 创建回答
 const createAnswer = () => {
-  console.log(currentUserInfo.value);
+  // console.log(currentUserInfo.value);
   if (!currentUserInfo.value) {
     proxy.Message.warning("请先登录");
     store.showLogin = 1;
@@ -304,7 +312,10 @@ const postAnswer = () => {
   }
 
   answerDataRef.value.validate(async (valid) => {
-    if (!valid) return;
+    if (!valid) {
+      proxy.Message.warning("请输入内容");
+      return;
+    }
     let params = {};
     Object.assign(params, answerData.value);
     params.questionId = questionDetail.value.questionId;
@@ -318,7 +329,7 @@ const postAnswer = () => {
     answerData.value.markdownContent = "";
     drawer.value = false;
   });
-  console.log(answerData.value);
+  // console.log(answerData.value);
 };
 const setHtmlContent = (htmlContent) => {
   answerData.value.content = htmlContent;

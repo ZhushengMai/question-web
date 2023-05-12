@@ -159,6 +159,8 @@ const logout = () => {
     localStorage.clear("userInfo");
     localStorage.clear("token");
     store.loginUserInfo = "";
+    // 重新加载页面
+    location.reload();
   });
 };
 
@@ -196,7 +198,6 @@ const activeBoard = ref(null);
 
 // 切换板块
 const boradClickHandler = (boardId) => {
-  
   router.push(`/faq/${boardId}`);
 };
 
@@ -208,6 +209,10 @@ const allQuestion = () => {
 // 搜索
 const input = ref("");
 const search = () => {
+  if (!input.value) {
+    proxy.Message.warning("请输入关键词");
+    return;
+  }
   router.push(`/search/${input.value}`);
   input.value = "";
 };

@@ -220,7 +220,7 @@ const submitForm = () => {
 watch(
   () => route.params.userId,
   (newVal, oldVal) => {
-    console.log(newVal);
+    // console.log(newVal);
     getUserInfo(newVal);
   },
   { immediate: true, deep: true }
@@ -229,7 +229,7 @@ watch(
 watch(
   () => activeName.value,
   (newVal, oldVal) => {
-    console.log(newVal);
+    // console.log(newVal);
     getPostByUser(newVal);
   },
   { immediate: true, deep: true }

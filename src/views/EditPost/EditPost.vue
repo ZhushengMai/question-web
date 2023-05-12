@@ -15,13 +15,16 @@
                 class="iconfont icon-fanhui"
                 style="cursor: pointer"
                 @click="back"
-                >返回</span
               >
-              <el-input
-                class="input-title"
-                v-model="formData.title"
-                placeholder="请输入问题标题，文本支持markdown语法"
-              />
+                返回</span
+              >
+              <el-form-item class="input-main" prop="title">
+                <el-input
+                  class="input-title"
+                  v-model="formData.title"
+                  placeholder="请输入问题标题，文本支持markdown语法"
+                />
+              </el-form-item>
 
               <el-button
                 type="primary"
@@ -50,8 +53,8 @@
     :buttons="dialogInfo.buttons"
     ref="postDialogRef"
   >
-    <el-form>
-      <el-form-item label="选择分类">
+    <el-form :rules="rules">
+      <el-form-item label="选择分类" prop="boardId">
         <el-radio-group v-model="formData.boardId" size="large">
           <el-radio-button
             v-for="item in boardList"
@@ -113,7 +116,7 @@ const back = () => {
   router.go(-1);
 };
 
-const rules = {
+const rules = reactive({
   title: [
     {
       required: true,
@@ -124,9 +127,9 @@ const rules = {
       message: "标题太长",
     },
   ],
-  boardId: [{ required: true, message: "请选择板块" }],
-  content: [{ required: true, message: "请输入正文" }],
-};
+  boardId: [{ required: true, message: "请选择板块", trigger: "blur" }],
+  content: [{ required: true, message: "请输入正文", trigger: "blur" }],
+});
 
 // 编辑器类型 0:富文本 1:markdown
 const editorType = ref(1);
@@ -183,7 +186,7 @@ const getQuestionDetail = async () => {
     },
   });
   if (!result) return;
-  console.log(result.data);
+  // console.log(result.data);
   formData.value.title = result.data.title;
   formData.value.content = result.data.content;
   formData.value.markdownContent = result.data.markdownContent;
@@ -233,9 +236,15 @@ watch(
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .input-title {
-          width: 30%;
+        .input-main {
+          display: flex;
+          align-items: center;
+          flex: 1;
+          .input-title {
+            margin-right: 60px;
+          }
         }
+
         .change-editor-type {
           .iconfont {
             cursor: pointer;

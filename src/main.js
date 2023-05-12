@@ -12,7 +12,6 @@ import EditorMarkdown from "./components/EditorMarkdown.vue";
 import EditorHtml from "./components/EditorHtml.vue";
 import DataList from "./components/DataList.vue";
 import CommonDialog from "./components/CommonDialog.vue";
-import UploadImage from "./components/UploadImage.vue";
 import CommentBox from "./components/CommentBox.vue";
 
 // 全局方法
@@ -33,7 +32,6 @@ app.component("EditorMarkdown", EditorMarkdown);
 app.component("EditorHtml", EditorHtml);
 app.component("DataList", DataList);
 app.component("CommonDialog", CommonDialog);
-app.component("UploadImage", UploadImage);
 app.component("CommentBox", CommentBox);
 
 app.use(pinia);

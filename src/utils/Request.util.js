@@ -3,10 +3,10 @@ import { ElLoading } from "element-plus";
 import Message from "./Message.utils";
 let token = localStorage.getItem("token") || "";
 
-const contentTypeForm = "application/x-www-form-urlencoded;charset=UTF-8";
 const contentTypeJson = "application/json";
-
+// 生产环境
 const productionUrl = "http://1.12.237.245:8002/";
+// 开发环境
 const devUrl = "http://localhost:3000";
 const instance = axios.create({
   baseURL: productionUrl,
@@ -53,10 +53,14 @@ instance.interceptors.response.use(
     }
   },
   (error) => {
+    console.log(error.response.data.message);
     if (error.config.showLoading && loading) {
       loading.close();
     }
-    return Promise.reject({ showError: true, msg: "请求失败！" });
+    return Promise.reject({
+      showError: true,
+      msg: error.response.data.message,
+    });
   }
 );
 

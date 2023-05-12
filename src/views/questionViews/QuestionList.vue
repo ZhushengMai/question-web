@@ -55,7 +55,6 @@ import { useRoute, useRouter } from "vue-router";
 import QuestionListItem from "./QuestionListItem.vue";
 import { question } from "../../utils/api.utils";
 import { useMainStore } from "../../stores/index";
-import { currentTime } from "../../utils/time.utils";
 const store = useMainStore();
 const route = useRoute();
 const router = useRouter();
@@ -82,7 +81,7 @@ const getQuestionList = async (boardId) => {
   // 转换时间
 
   state.value = true;
-  console.log(questionData.list);
+  // console.log(questionData.list);
 };
 // getQuestionList();
 const activeTab = ref("null");

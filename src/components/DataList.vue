@@ -23,7 +23,7 @@ const props = defineProps({
   },
 });
 
-console.log(props.dataSource);
+// console.log(props.dataSource);
 </script>
 <style lang="scss">
 .skeleton {

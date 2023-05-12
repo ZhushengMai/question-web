@@ -12,11 +12,15 @@
         label-width="auto"
         ref="formDataRef"
       >
-        <el-form-item label="账号" prop="account">
+        <el-form-item type="text" label="账号" prop="account">
           <el-input placeholder="请输入账号" v-model="formData.account" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input placeholder="请输入密码" v-model="formData.password" />
+          <el-input
+            type="password"
+            placeholder="请输入密码"
+            v-model="formData.password"
+          />
         </el-form-item>
         <!-- 找回密码 -->
         <el-form-item
@@ -25,6 +29,7 @@
           v-if="opType !== 0"
         >
           <el-input
+            type="password"
             placeholder="再次输入密码"
             v-model="formData.confirmPassword"
           />
@@ -168,7 +173,7 @@ const login = async () => {
   proxy.Message.success("登陆成功");
   store.showLogin = false;
   restForm();
-  console.log(result);
+  // console.log(result);
 };
 
 // 注册
@@ -190,7 +195,7 @@ const register = async () => {
   if (!result) return;
   proxy.Message.success("注册成功");
   showPanel(0);
-  console.log(result);
+  // console.log(result);
 };
 
 const formDataRef = ref(null);
