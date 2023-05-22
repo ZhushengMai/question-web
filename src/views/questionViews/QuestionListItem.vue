@@ -33,9 +33,13 @@
           <el-divider direction="vertical"></el-divider>
           {{ proxy.TransformIsoDate(data.createTime) }}
         </div>
-        <span class="board">{{ data.board.boardName }}</span>
+        <span class="board">
+          <RouterLink class="a-link" :to="`/faq/${data.board.boardId}`">
+            {{ data.board.boardName }}
+          </RouterLink>
+        </span>
 
-        <!-- <div class="responder">Meathill 今天 09:38 回答</div> -->
+       
       </div>
     </div>
   </div>

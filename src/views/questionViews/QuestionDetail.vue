@@ -6,7 +6,14 @@
         <h2 class="question-title">{{ questionDetail.title }}</h2>
         <div class="author-info">
           <Avatar></Avatar>
-          <span class="author-name">{{ questionDetail.user.nickName }}</span>
+          <span class="author-name">
+            <RouterLink
+              class="a-link"
+              :to="`/user/${questionDetail.user.userId}`"
+            >
+              {{ questionDetail.user.nickName }}
+            </RouterLink>
+          </span>
           <el-divider direction="vertical" />
           <span>{{ proxy.TransformIsoDate(questionDetail.createTime) }}</span>
           <el-divider direction="vertical" />
@@ -195,7 +202,6 @@ import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-light.css";
 import { question, answer } from "../../utils/api.utils";
 import { useMainStore } from "../../stores/index";
-import { async } from "@kangc/v-md-editor";
 const store = useMainStore();
 const currentUserInfo = ref({});
 
@@ -270,7 +276,7 @@ const delQuestion = async () => {
       return;
     }
     proxy.Message.success("删除成功");
-    router.go(-1);
+    router.push("/");
   });
 };
 
@@ -414,11 +420,12 @@ onMounted(() => {
 <style lang="scss">
 .question-detail {
   display: flex;
+
   .question-detail-info {
     flex: 1;
     .question-main {
       background-color: #fff;
-      padding: 2vw;
+      padding: 25px;
 
       .question-title {
       }
@@ -444,7 +451,7 @@ onMounted(() => {
         // margin-bottom: 10px;
         border-bottom: 1px solid #c1c1c1;
         background-color: #fff;
-        padding: 2vw;
+        padding: 25px;
 
         .answer-user-info {
           display: flex;

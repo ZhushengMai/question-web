@@ -1,15 +1,14 @@
 import axios from "axios";
 import { ElLoading } from "element-plus";
 import Message from "./Message.utils";
-let token = localStorage.getItem("token") || "";
 
 const contentTypeJson = "application/json";
 // 生产环境
-const productionUrl = "http://1.12.237.245:8002/";
+const productionUrl = "http://1.12.237.245:8002";
 // 开发环境
 const devUrl = "http://localhost:3000";
 const instance = axios.create({
-  baseURL: productionUrl,
+  baseURL: devUrl,
   timeout: 10 * 1000,
 });
 // 请求前过滤器
@@ -77,10 +76,12 @@ const request = async (config) => {
   for (let key in params) {
     formData.append(key, params[key] == undefined ? "" : params[key]);
   }
+  // 从浏览器缓存中获取token
+  let token = "Bearer " + (localStorage.getItem("token") || "");
   let headers = {
     "Content-Type": contentType,
     "X-Requested-With": "XMLHttpRequest",
-    Authorization: "Bearer " + token,
+    Authorization: token,
   };
   try {
     return await instance.post(url, formData, {

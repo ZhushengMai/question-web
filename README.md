@@ -1,29 +1,15 @@
-# dev-home
+# 基于NestJS和Vue的问答平台——前端
+## 技术选型
+- Pinia
+- Element Plus
+- axios
 
-This template should help get you started developing with Vue 3 in Vite.
+```bash
+pnpm i
 
-## Recommended IDE Setup
+pnpm run dev
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+pnpm run build
 
-## Customize configuration
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-pnpm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-pnpm dev
-```
-
-### Compile and Minify for Production
-
-```sh
-pnpm build
 ```

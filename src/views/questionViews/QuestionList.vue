@@ -97,18 +97,33 @@ const handelPageNoChange = (pageNo) => {
 };
 
 watch(
-  () => route.params.boardId,
+  () => route.params,
   (newVal, oldVal) => {
-    currentPage.value = 1;
-    getQuestionList(newVal);
-    userInfo.value = store.loginUserInfo;
+    console.log(newVal.boardId);
+    if (newVal.boardId) {
+      currentPage.value = 1;
+      getQuestionList(newVal.boardId);
+      userInfo.value = store.loginUserInfo;
+    } else {
+      getQuestionList();
+    }
   },
   { immediate: true, deep: true }
 );
 
-onMounted(() => {
-  getQuestionList();
-});
+watch(
+  () => store.loginUserInfo,
+  (newVal, oldVal) => {
+    if (newVal != undefined && newVal != null) {
+      userInfo.value = newVal;
+    } else {
+      userInfo.value = {};
+    }
+  },
+  { immediate: true, deep: true }
+);
+
+onMounted(() => {});
 </script>
 <style lang="scss">
 .faq-list-body {

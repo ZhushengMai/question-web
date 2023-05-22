@@ -34,7 +34,7 @@
             <!-- 用户区域 -->
             <div class="user-operation">
               <el-button
-                v-if="!isLogin"
+                v-if="!userInfo"
                 type="primary"
                 class="theme-color"
                 style="background-color: var(--mainColor)"
@@ -152,15 +152,14 @@ const route = useRoute();
 const router = useRouter();
 const store = useMainStore();
 
-const isLogin = ref(store.loginUserInfo);
 const logout = () => {
   proxy.Confirm("确认退出？", () => {
-    isLogin.value = null;
+    userInfo.value = {};
     localStorage.clear("userInfo");
     localStorage.clear("token");
     store.loginUserInfo = "";
     // 重新加载页面
-    location.reload();
+    // location.reload();
   });
 };
 
@@ -235,6 +234,20 @@ watch(
   },
   { immediate: true, deep: true }
 );
+
+// 监听用户信息变化
+const userInfo = ref({});
+watch(
+  () => store.loginUserInfo,
+  (newVal, oldVal) => {
+    if (newVal != undefined && newVal != null) {
+      userInfo.value = newVal;
+    } else {
+      userInfo.value = {};
+    }
+  },
+  { immediate: true, deep: true }
+);
 </script>
 <style lang="scss" scoped>
 .header {
@@ -273,6 +286,11 @@ watch(
           display: flex;
           .search {
           }
+          .search-mobile {
+            display: flex;
+            align-items: center;
+            font-size: 1.5em;
+          }
           .user-operation {
             width: 200px;
             font-size: 0.5em;
@@ -294,12 +312,13 @@ watch(
   }
 
   .category-tags-container {
+    overflow: auto;
     .categories-list {
       align-items: center;
       display: flex;
       height: 48px;
       margin: 0 auto;
-      overflow-x: auto;
+
       .categories-list-item {
         color: #606a78;
         cursor: pointer;

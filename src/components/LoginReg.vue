@@ -12,7 +12,7 @@
         label-width="auto"
         ref="formDataRef"
       >
-        <el-form-item type="text" label="账号" prop="account">
+        <el-form-item label="账号" prop="account">
           <el-input placeholder="请输入账号" v-model="formData.account" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
@@ -22,7 +22,8 @@
             v-model="formData.password"
           />
         </el-form-item>
-        <!-- 找回密码 -->
+
+        <!-- 确认密码 -->
         <el-form-item
           label="确认密码"
           prop="confirmPassword"
@@ -51,13 +52,13 @@
             <el-checkbox v-model="formData.rememberMe">记住我</el-checkbox>
           </div> -->
           <div class="no-account" v-if="opType == 0">
-            <a href="#" class="a-link" @click="showPanel(1)">没有帐号</a>
+            <span class="a-link" @click="showPanel(1)">没有帐号</span>
           </div>
           <div class="no-account" v-if="opType == 1">
-            <a href="#" class="a-link" @click="showPanel(0)">已有帐号</a>
+            <span class="a-link" @click="showPanel(0)">已有帐号</span>
           </div>
           <div class="no-account" v-if="opType == 2">
-            <a href="#" class="a-link" @click="showPanel(0)">返回登录</a>
+            <span class="a-link" @click="showPanel(0)">返回登录</span>
           </div>
         </el-form-item>
         <el-form-item>
@@ -111,23 +112,23 @@ defineExpose({
 });
 // 表单数据
 const formData = reactive({
-  account: "",
-  password: "",
-  confirmPassword: "",
-  email: "",
-  rememberMe: 0,
-  nickName: "",
+  // account: "",
+  // password: "",
+  // confirmPassword: "",
+  // email: "",
+  // rememberMe: 0,
+  // nickName: "",
 });
 
-const validatePass = (rule, value, callback) => {
-  if (value === "") {
-    callback(new Error("请再次输入密码"));
-  } else if (value !== formData.password) {
-    callback(new Error("密码不匹配！"));
-  } else {
-    callback();
-  }
-};
+// const validatePass = (rule, value, callback) => {
+//   if (value === "") {
+//     callback(new Error("请再次输入密码"));
+//   } else if (value !== formData.password) {
+//     callback(new Error("密码不匹配！"));
+//   } else {
+//     callback();
+//   }
+// };
 
 const rules = reactive({
   account: [
@@ -138,41 +139,53 @@ const rules = reactive({
     { required: true, message: "请输入密码", trigger: "blur" },
     { min: 3, max: 20, message: "密码只能是3-15位", trigger: "blur" },
   ],
-  confirmPassword: [{ validator: validatePass, trigger: "blur" }],
+  confirmPassword: [
+    { required: true, message: "请确认密码", trigger: "blur" },
+    { validator: proxy.Validate.validatePass, trigger: "blur" },
+  ],
   email: [
     { required: true, message: "请输入邮箱", trigger: "blur" },
-    { min: 3, max: 20, message: "邮箱只能是3-20位", trigger: "blur" },
+    { min: 3, max: 30, message: "邮箱只能是3-30位", trigger: "blur" },
+    { validator: proxy.Validate.validateEmail, trigger: "blur" },
   ],
   nickName: [{ required: true, message: "请输入昵称", trigger: "blur" }],
 });
 
 // 登录
-const login = async () => {
-  let result = await proxy.Request({
-    url: auth.login,
-    params: {
-      username: formData.account,
-      password: formData.password,
-    },
-    dataType: "json",
-    errorCallback: () => {
-      proxy.Message.error("登录失败");
-    },
+const login = () => {
+  formDataRef.value.validate(async (vaild) => {
+    if (!vaild) {
+      proxy.Message.warning("请输入内容！");
+      return;
+    }
+    let result = await proxy.Request({
+      url: auth.login,
+      params: {
+        username: formData.account,
+        password: formData.password,
+      },
+      dataType: "json",
+      errorCallback: () => {
+        proxy.Message.error("登录失败");
+      },
+    });
+    if (!result) return;
+    result.data.userInfo.createTime = proxy.TransformIsoDate(
+      result.data.userInfo.createTime
+    );
+    result.data.userInfo.updateTime = proxy.TransformIsoDate(
+      result.data.userInfo.updateTime
+    );
+
+    localStorage.setItem("userInfo", JSON.stringify(result.data.userInfo));
+    localStorage.setItem("token", result.data.token);
+    proxy.Message.success("登陆成功");
+    store.showLogin = false;
+    store.loginUserInfo = result.data.userInfo;
+    // window.location.reload();
+    restForm();
   });
-  if (!result) return;
-  result.data.userInfo.createTime = proxy.TransformIsoDate(
-    result.data.userInfo.createTime
-  );
-  result.data.userInfo.updateTime = proxy.TransformIsoDate(
-    result.data.userInfo.updateTime
-  );
-  console.log(result.data.userInfo);
-  window.location.reload();
-  localStorage.setItem("userInfo", JSON.stringify(result.data.userInfo));
-  localStorage.setItem("token", result.data.token);
-  proxy.Message.success("登陆成功");
-  store.showLogin = false;
-  restForm();
+
   // console.log(result);
 };
 
@@ -195,7 +208,7 @@ const register = async () => {
   if (!result) return;
   proxy.Message.success("注册成功");
   showPanel(0);
-  // console.log(result);
+  // console.log(result)
 };
 
 const formDataRef = ref(null);
